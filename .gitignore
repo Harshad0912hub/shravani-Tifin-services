@@ -1,3 +1,16 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Testing
+coverage
+
+# Production
+dist
+dist-ssr
+build/
+
 # Logs
 logs
 *.log
@@ -6,13 +19,21 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+build_err.log
 
-node_modules
-dist
-dist-ssr
-*.local
+# Scratch / Temp files
+build.txt
+make_dark.js
+make_light.js
 
-# Editor directories and files
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor / OS
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -22,5 +43,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+Thumbs.db
 
+# Vercel
 .vercel
