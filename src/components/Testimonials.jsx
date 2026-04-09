@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Star, Send } from 'lucide-react';
 import { useLanguage } from '../LanguageContext';
+import { supabase } from '../supabaseClient';
 
 export default function Testimonials() {
   const { t } = useLanguage();
   
-  // Default testimonials
+  // Default testimonials (used if DB is empty)
   const defaultTestimonials = [
     {
       id: 4,
@@ -38,39 +39,64 @@ export default function Testimonials() {
     }
   ];
 
-  // We load from local storage so the user doesn't lose comments on refresh
-  const [testimonials, setTestimonials] = useState(() => {
-    const saved = localStorage.getItem('sts_testimonials');
-    if (saved) {
-      return JSON.parse(saved);
-    }
-    return defaultTestimonials;
-  });
-
+  const [testimonials, setTestimonials] = useState(defaultTestimonials);
   const [formData, setFormData] = useState({ name: '', text: '', area: '', rating: 5 });
+  const [loading, setLoading] = useState(true);
 
-  // Update local storage when state changes
+  // Fetch from Supabase
   useEffect(() => {
-    localStorage.setItem('sts_testimonials', JSON.stringify(testimonials));
-  }, [testimonials]);
+    fetchTestimonials();
+  }, []);
 
-  const handleSubmit = (e) => {
+  async function fetchTestimonials() {
+    try {
+      const { data, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      
+      if (data && data.length > 0) {
+        setTestimonials(data);
+      }
+    } catch (error) {
+      console.error('Error fetching testimonials:', error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.text) return;
 
-    const newComment = {
-      id: Date.now(),
-      name: formData.name,
-      text: formData.text,
-      area: formData.area || "Pune",
-      rating: formData.rating,
-    };
+    try {
+      const { data, error } = await supabase
+        .from('testimonials')
+        .insert([
+          { 
+            name: formData.name, 
+            text: formData.text, 
+            area: formData.area || "Pune", 
+            rating: formData.rating 
+          }
+        ])
+        .select();
 
-    // Add exactly to the top!
-    setTestimonials([newComment, ...testimonials]);
-    
-    // Reset form
-    setFormData({ name: '', text: '', area: '', rating: 5 });
+      if (error) throw error;
+
+      // Update UI immediately
+      if (data) {
+        setTestimonials([data[0], ...testimonials]);
+      }
+      
+      // Reset form
+      setFormData({ name: '', text: '', area: '', rating: 5 });
+    } catch (error) {
+      console.error('Error adding testimonial:', error.message);
+      alert("Something went wrong. Please try again!");
+    }
   };
 
   // Display exactly 4 comments (forms a neat 2x2 grid)
