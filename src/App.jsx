@@ -5,7 +5,6 @@ import Menu from './components/Menu';
 import ServiceAreas from './components/ServiceAreas';
 import ContactForm from './components/ContactForm';
 import Testimonials from './components/Testimonials';
-import Gallery from './components/Gallery';
 import { MessageCircle, ChefHat, Sun, Moon } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 
