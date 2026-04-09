@@ -9,11 +9,88 @@ import Gallery from './components/Gallery';
 import { MessageCircle, ChefHat, Sun, Moon } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 
+const Loader = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 1 }}
+      exit={{ 
+        y: -1000,
+        opacity: 0,
+        transition: { duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.2 } 
+      }}
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white dark:bg-[#0a0a0a]"
+    >
+      <div className="relative flex flex-col items-center">
+        {/* Animated Saffron Logo Box */}
+        <motion.div
+          initial={{ scale: 0, rotate: -45 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="w-20 h-20 rounded-[2rem] bg-[#FF6B35] flex items-center justify-center shadow-[0_20px_40px_rgba(255,107,53,0.3)] mb-8"
+        >
+          <ChefHat className="w-10 h-10 text-white" />
+        </motion.div>
+
+        {/* Brand Name Reveal */}
+        <div className="overflow-hidden mb-2">
+          <motion.h1
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: [0.33, 1, 0.68, 1] }}
+            className="text-4xl md:text-5xl font-black tracking-tighter text-slate-900 dark:text-white"
+          >
+            Shravani
+          </motion.h1>
+        </div>
+        
+        <div className="overflow-hidden">
+          <motion.p
+            initial={{ y: 50 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6, ease: [0.33, 1, 0.68, 1] }}
+            className="text-[0.65rem] md:text-xs tracking-[0.4em] text-[#FF6B35] uppercase font-bold"
+          >
+            Tiffin Services
+          </motion.p>
+        </div>
+
+        {/* Spiritual Tagline Fade In */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5, delay: 1.2 }}
+          className="absolute -bottom-24 whitespace-nowrap text-slate-400 dark:text-slate-600 font-medium tracking-widest italic"
+        >
+          "Serving Love, Purity & Tradition"
+        </motion.p>
+      </div>
+      
+      {/* Background decoration */}
+      <motion.div 
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 2, ease: "easeOut" }}
+        className="absolute w-[500px] h-[500px] rounded-full bg-orange-100/50 dark:bg-saffron-500/5 blur-[120px] -z-10" 
+      />
+    </motion.div>
+  );
+};
+
 function App() {
   const { lang, setLang } = useLanguage();
   const [theme, setTheme] = useState(
     () => localStorage.getItem('theme') || 'light'
   );
+  
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Hide loader after 2.5s
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -45,6 +122,9 @@ function App() {
 
   return (
     <div className="font-sans antialiased text-slate-800 dark:text-gray-100 bg-[#FAFAFA] dark:bg-[#0a0a0a] min-h-screen selection:bg-[#FF6B35] selection:text-white relative overflow-hidden transition-colors duration-500">
+      <AnimatePresence>
+        {isLoading && <Loader />}
+      </AnimatePresence>
 
       {/* Nomio-Style Abstract Colorful Background Vectors */}
       <div className="fixed inset-0 pointer-events-none z-0">
