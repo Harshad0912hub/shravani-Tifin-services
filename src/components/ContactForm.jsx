@@ -57,16 +57,6 @@ export default function ContactForm() {
                 <p className="text-lg font-semibold text-slate-800 dark:text-white transition-colors duration-500">+91 9823784142</p>
               </div>
             </div>
-            
-            <div className="flex items-center gap-4 glass p-4 rounded-xl max-w-sm border-slate-200 dark:border-white/5 transition-colors duration-500">
-              <div className="w-12 h-12 bg-gold/10 dark:bg-gold/20 rounded-full flex items-center justify-center text-gold-dark dark:text-gold">
-                <Phone className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-sm text-slate-500 dark:text-slate-300 font-medium transition-colors duration-500">{t.alternateContact}</p>
-                <p className="text-lg font-semibold text-slate-800 dark:text-white transition-colors duration-500">+91 9823964030</p>
-              </div>
-            </div>
           </div>
         </motion.div>
 
